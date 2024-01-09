@@ -1,5 +1,6 @@
 mod commands;
 
+use anyhow::Error;
 use dotenv::dotenv;
 use poise::serenity_prelude as serenity;
 use poise::FrameworkError::*;
@@ -15,7 +16,7 @@ use commands::projects;
 struct Data {
     projects: Mutex<Vec<String>>,
 }
-type Error = Box<dyn std::error::Error + Send + Sync>;
+
 type Context<'a> = poise::Context<'a, Data, Error>;
 
 // Error handler
