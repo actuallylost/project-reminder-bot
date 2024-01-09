@@ -11,6 +11,7 @@ use tracing::{error, info};
 use commands::add_to_list as add;
 use commands::ping;
 use commands::projects;
+use commands::remove_from_list as remove;
 
 // User data
 struct Data {
@@ -62,7 +63,12 @@ async fn main() {
         .token(token)
         .intents(intents)
         .options(poise::FrameworkOptions {
-            commands: vec![ping::ping(), projects::projects(), add::add_to_list()],
+            commands: vec![
+                ping::ping(),
+                projects::projects(),
+                add::add_to_list(),
+                remove::remove_from_list(),
+            ],
             prefix_options: poise::PrefixFrameworkOptions {
                 prefix: Some("!".into()),
                 ..Default::default()
