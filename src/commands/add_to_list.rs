@@ -1,10 +1,25 @@
 use crate::{Context, Error};
 
-/// Show your project list
-#[poise::command(prefix_command, slash_command, aliases("add"))]
+/// Add project to list
+#[poise::command(
+    prefix_command,
+    slash_command,
+    aliases("update_list", "update_projects")
+)]
 pub async fn add_to_list(
     ctx: Context<'_>,
+    #[description = "Specify the project name to add"] entry: Option<String>,
 ) -> Result<(), Error> {
-    todo!("Add to list commands");
+    let mut response = String::new();
+    let mut projects = ctx.data().projects.lock().await;
+    match &entry {
+        Some(val) => {
+            projects.push(val.clone());
+            response += &format! {"Added `{}` to the project list!", val}
+        }
+        None => response += "No project added.",
+    }
+
+    ctx.say(response).await?;
     Ok(())
 }
