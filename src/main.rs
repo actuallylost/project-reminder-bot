@@ -9,6 +9,7 @@ use tokio::sync::Mutex;
 use tracing::{error, info};
 
 use commands::add_to_list as add;
+use commands::clear_projects as clear;
 use commands::ping;
 use commands::projects;
 use commands::remove_from_list as remove;
@@ -68,6 +69,7 @@ async fn main() {
                 projects::projects(),
                 add::add_to_list(),
                 remove::remove_from_list(),
+                clear::clear_projects(),
             ],
             prefix_options: poise::PrefixFrameworkOptions {
                 prefix: Some("!".into()),

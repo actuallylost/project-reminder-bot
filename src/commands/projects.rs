@@ -10,6 +10,11 @@ pub async fn projects(ctx: Context<'_>) -> Result<(), Error> {
     }
 
     let mut response = String::from("Your projects are: ");
+    if projects.len() == 1 {
+        response += &format! {"`{}`", projects[0]};
+        ctx.say(response).await?;
+        return Ok(());
+    }
     for project in projects[0..projects.len() - 1].iter() {
         response += &format! {"`{}`, ", project};
     }
