@@ -8,17 +8,16 @@ pub async fn projects(ctx: Context<'_>) -> Result<(), Error> {
         ctx.say("Your project list is empty!").await?;
         return Ok(());
     }
-
     let mut response = String::from("Your projects are: ");
     if projects.len() == 1 {
-        response += &format! {"`{}`", projects[0]};
+        response += &format!("`{}`", projects[0]);
         ctx.say(response).await?;
         return Ok(());
     }
     for project in projects[0..projects.len() - 1].iter() {
-        response += &format! {"`{}`, ", project};
+        response += &format!("`{}`, ", project);
     }
-    response += &format! {" and `{}`.", projects[projects.len() - 1]};
+    response += &format!(" and `{}`.", projects[projects.len() - 1]);
 
     ctx.say(response).await?;
     Ok(())

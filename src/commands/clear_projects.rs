@@ -12,7 +12,7 @@ pub async fn clear_projects(ctx: Context<'_>) -> Result<(), Error> {
     let mut response = String::from("Your project list has been cleared! ");
     let count = projects.iter().fold(0, |acc, _x| acc + 1);
     projects.clear();
-    response += &format! {"(`{}` projects cleared)", count};
+    response += &format!("(`{}` projects cleared)", count);
 
     ctx.say(response).await?;
     Ok(())

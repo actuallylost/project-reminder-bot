@@ -10,16 +10,16 @@ pub async fn add_to_list(
     ctx: Context<'_>,
     #[description = "Specify the project name to add"] entry: Option<String>,
 ) -> Result<(), Error> {
-    let mut response = String::new();
-    let mut projects = ctx.data().projects.lock().await;
-    match &entry {
-        Some(val) => {
-            projects.push(val.clone());
-            response += &format! {"Added `{}` to the project list!", val}
-        }
-        None => response += "No project added.",
+    if entry.is_none() {
+        ctx.say("No entry specified!").await?;
+        return Ok(());
     }
-
-    ctx.say(response).await?;
+    let mut projects = ctx.data().projects.lock().await;
+    ctx.say(format!(
+        "Added `{}` to the project list!",
+        entry.as_ref().unwrap()
+    ))
+    .await?;
+    projects.push(entry.unwrap());
     Ok(())
 }
