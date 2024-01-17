@@ -1,0 +1,25 @@
+generator client {
+  provider = "cargo prisma"
+  output   = "../src/prisma.rs"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         BigInt    @id @db.BigInt
+  name       String
+  created_at DateTime  @default(now())
+  projects   Project[]
+}
+
+model Project {
+  id         String   @id @default(uuid())
+  name       String
+  created_at DateTime @default(now())
+
+  User    User?   @relation(fields: [user_id], references: [id])
+  user_id BigInt?
+}

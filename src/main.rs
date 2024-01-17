@@ -1,4 +1,5 @@
 mod commands;
+mod prisma;
 
 use anyhow::Error;
 use dotenv::dotenv;
