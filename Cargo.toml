@@ -3,12 +3,19 @@ name = "project-reminder-bot"
 version = "0.2.0"
 edition = "2021"
 
+[workspace]
+members = [
+    "prisma-cli",
+]
+
 [dependencies]
 poise = "0.5"
 dotenv = "0.15"
 anyhow = "1.0"
 tracing = "0.1.27"
 tracing-subscriber = "0.3.18"
+serde = "1.0.195"
+prisma-client-rust = { git = "https://github.com/Brendonovich/prisma-client-rust", version = "0.6.11", default-features = false, features = ["postgres"] }
 
 [dependencies.tokio]
 version = "1.0"
