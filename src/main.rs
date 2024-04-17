@@ -5,6 +5,9 @@ use anyhow::Error;
 use dotenv::dotenv;
 use poise::serenity_prelude as serenity;
 use poise::FrameworkError::*;
+use prisma::project;
+use prisma::PrismaClient;
+use prisma_client_rust::NewClientError;
 use std::env;
 use tokio::sync::Mutex;
 use tracing::{error, info};
@@ -17,7 +20,8 @@ use commands::remove_from_list as remove;
 
 // User data
 struct Data {
-    projects: Mutex<Vec<String>>,
+    client: PrismaClient,
+    projects: Mutex<Vec<project::Data>>,
 }
 
 type Context<'a> = poise::Context<'a, Data, Error>;
@@ -42,7 +46,12 @@ async fn main() {
     // Loads env file
     dotenv().ok();
 
+    // Subscribes to
     tracing_subscriber::fmt::init();
+
+    // Defines Prisma client
+    let client: Result<PrismaClient, NewClientError> = PrismaClient::_builder().build().await;
+    let prisma = client.unwrap();
 
     // Defines token
     let token = env::var("DISCORD_TOKEN").expect("Missing DISCORD_TOKEN, check .env!");
@@ -58,6 +67,7 @@ async fn main() {
                 info!("Logged in as {}", _ready.user.name);
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 Ok(Data {
+                    client: prisma,
                     projects: Mutex::new(Vec::new()),
                 })
             })
@@ -77,14 +87,7 @@ async fn main() {
                 ..Default::default()
             },
             on_error: |error| Box::pin(on_error(error)),
-            pre_command: |ctx| {
-                Box::pin(async move {
-                    info!(
-                        "[LOG] Executing command {}...",
-                        ctx.command().qualified_name
-                    );
-                })
-            },
+
             // This code is run after a command if it was successful (returned Ok)
             post_command: |ctx| {
                 Box::pin(async move {
